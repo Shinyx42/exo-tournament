@@ -2,7 +2,7 @@ package me.guillaume.recruitment.tournament;
 
 public class Figther {
 	private Integer m_hitpoint;
-	private Wepon m_wepon;
+	protected Wepon m_wepon;
 	private Buckler m_buckler;
 	private Boolean m_armored;
 	
@@ -26,11 +26,28 @@ public class Figther {
 		if(other.hitPoints()>0) other.engage(this);
 	}
 	
-	private void takeDmg(Wepon wepon) {
+	protected void takeDmg(Wepon wepon) {
 		if(m_buckler == null) setHitPoint(hitPoints()-wepon.hit(m_armored));
 		else setHitPoint(hitPoints()-m_buckler.hit(wepon, m_armored));
 		if(hitPoints()<0) setHitPoint(0);
 		//System.out.println(m_hitpoint);
+		
+	}
+	
+	protected int takeDmg(Wepon wepon, int vic) {
+		int hit=0;
+		if(m_buckler == null) hit = wepon.hit(m_armored);
+		else hit = m_buckler.hit(wepon, m_armored);
+		
+		if(vic>0 && hit>0) {
+			hit +=20;
+			vic -=1;
+		}
+		
+		setHitPoint(hitPoints()-hit);
+		if(hitPoints()<0) setHitPoint(0);
+		System.out.println(m_hitpoint);
+		return vic;
 		
 	}
 
@@ -55,6 +72,13 @@ public class Figther {
 			m_armored = true;
 			m_wepon.Armored();
 		}
+		
+	}
+
+	public void takeDmg(Wepon wepon, boolean berserk) {
+		if(m_buckler == null) setHitPoint(hitPoints()-wepon.hit(m_armored));
+		else setHitPoint(hitPoints()-m_buckler.hit(wepon, m_armored)*(berserk? 2:1));
+		if(hitPoints()<0) setHitPoint(0);
 		
 	}
 }
