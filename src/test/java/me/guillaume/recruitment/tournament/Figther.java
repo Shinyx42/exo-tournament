@@ -2,11 +2,13 @@ package me.guillaume.recruitment.tournament;
 
 public class Figther {
 	private Integer m_hitpoint;
-	private Integer m_damage;
+	private Wepon m_wepon;
+	private Buckler m_buckler;
 	
-	Figther(int hp, int damage){
+	Figther(int hp){
 		setHitPoint(hp);
-		setDamage(damage);
+		m_wepon = null;
+		m_buckler = null;
 	}
 
 	public Integer hitPoints() {
@@ -18,21 +20,31 @@ public class Figther {
 	}
 	
 	public void engage(Figther other) {
-		other.takeDmg(this.damage());
+		other.takeDmg(this.m_wepon);
 		if(other.hitPoints()>0) other.engage(this);
 	}
 	
-	private void takeDmg(Integer damage) {
-		setHitPoint(hitPoints()-damage);
+	private void takeDmg(Wepon wepon) {
+		if(m_buckler == null) setHitPoint(hitPoints()-wepon.hit());
+		else setHitPoint(hitPoints()-m_buckler.hit(wepon));
 		if(hitPoints()<0) setHitPoint(0);
+		//System.out.println(m_hitpoint);
 		
 	}
 
 	public Integer damage() {
-		return m_damage;
+		return m_wepon.damage();
 	}
 	
-	public void setDamage(int damage) {
-		m_damage=damage;
+	protected void equipe(String eqpmnt) {
+		if(eqpmnt.equals("axe")) {
+			m_wepon = new Axe();
+		}
+		if(eqpmnt.equals("sword")) {
+			m_wepon = new Sword();
+		}
+		if(eqpmnt.equals("buckler")) {
+			m_buckler = new Buckler();
+		}
 	}
 }
