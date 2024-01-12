@@ -4,11 +4,13 @@ public class Figther {
 	private Integer m_hitpoint;
 	private Wepon m_wepon;
 	private Buckler m_buckler;
+	private Boolean m_armored;
 	
 	Figther(int hp){
 		setHitPoint(hp);
 		m_wepon = null;
 		m_buckler = null;
+		m_armored = false;
 	}
 
 	public Integer hitPoints() {
@@ -25,8 +27,8 @@ public class Figther {
 	}
 	
 	private void takeDmg(Wepon wepon) {
-		if(m_buckler == null) setHitPoint(hitPoints()-wepon.hit());
-		else setHitPoint(hitPoints()-m_buckler.hit(wepon));
+		if(m_buckler == null) setHitPoint(hitPoints()-wepon.hit(m_armored));
+		else setHitPoint(hitPoints()-m_buckler.hit(wepon, m_armored));
 		if(hitPoints()<0) setHitPoint(0);
 		//System.out.println(m_hitpoint);
 		
@@ -46,5 +48,13 @@ public class Figther {
 		if(eqpmnt.equals("buckler")) {
 			m_buckler = new Buckler();
 		}
+		if(eqpmnt.equals("greatsword")) {
+			m_wepon = new GreatSword();
+		}
+		if(eqpmnt.equals("armor")) {
+			m_armored = true;
+			m_wepon.Armored();
+		}
+		
 	}
 }
